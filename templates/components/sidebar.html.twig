@@ -1,0 +1,105 @@
+{% set current_route = app.request.attributes.get('_route') %}
+
+<nav class="sidebar">
+    <div class="top-content">
+        <div class="profile-card">
+            <h2>Clément<br>SANCHIS</h2>
+            <p>Étudiant en BTS SIO<br>Option SLAM</p>
+        </div>
+
+        <div class="nav-menu">
+
+            {# --- Accueil --- #}
+            <a href="{{ path('app_home') }}#accueil" class="nav-link-custom {{ current_route == 'app_home' ? 'active' : '' }}">
+                <i class="fas fa-home"></i>
+                Accueil
+            </a>
+
+            <div class="sub-menu">
+                <a href="{{ path('app_home') }}#profil" class="nav-link-custom">
+                    <i class="fas fa-user"></i>
+                    Profil
+                </a>
+                <a href="{{ path('app_home') }}#parcours" class="nav-link-custom">
+                    <i class="fas fa-graduation-cap"></i>
+                    Parcours
+                </a>
+            </div>
+
+            {# --- Projets : pointe vers app_projets pour que active fonctionne --- #}
+            <a href="{{ path('app_home') }}#projets" class="nav-link-custom {{ current_route == 'app_projets' ? 'active' : '' }}">
+                <i class="fas fa-code"></i>
+                Projets
+            </a>
+
+            {# --- Sous-menu Projets visible uniquement sur la page projets --- #}
+            {% if current_route == 'app_projets' %}
+                <div class="sub-menu">
+                    <a href="#projets-scolaires" class="nav-link-custom sidebar-anchor">
+                        <i class="fas fa-graduation-cap"></i>
+                        Projets Scolaires
+                    </a>
+                    <a href="#projets-persos" class="nav-link-custom sidebar-anchor">
+                        <i class="fas fa-user"></i>
+                        Projets Personnels
+                    </a>
+                    <a href="#projets-pros" class="nav-link-custom sidebar-anchor">
+                        <i class="fas fa-briefcase"></i>
+                        Projets Professionnels
+                    </a>
+                </div>
+            {% endif %}
+
+            {# --- Veille --- #}
+            <a href="{{ path('app_home') }}#veille" class="nav-link-custom">
+                <i class="fas fa-search"></i>
+                Veille
+            </a>
+
+            {# --- Contact --- #}
+            <a href="{{ path('app_home') }}#contact" class="nav-link-custom">
+                <i class="fas fa-envelope"></i>
+                Contact
+            </a>
+
+        </div>
+    </div>
+
+    <div class="mt-auto text-center">
+        <div class="social-icons mb-3">
+            <a href="https://www.linkedin.com/in/clement-sanchis-2b989b196" target="_blank" class="text-white fs-3">
+                <i class="fab fa-linkedin"></i>
+            </a>
+        </div>
+        <footer class="small">
+            © 2026 Designed by Clément SANCHIS
+        </footer>
+    </div>
+</nav>
+
+{# Script : active le bon sous-lien selon la section visible à l'écran #}
+{% if current_route == 'app_projets' %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const anchors = document.querySelectorAll('.sidebar-anchor');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    anchors.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.4 });
+
+        document.querySelectorAll('section[id]').forEach(section => {
+            observer.observe(section);
+        });
+    });
+</script>
+{% endif %}
